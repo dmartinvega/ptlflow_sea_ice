@@ -1,0 +1,167 @@
+python_exec: /home/jade/miniforge3/envs/ptlflow/bin/python
+
+name: sidex_40km
+
+input_path: /home/jade/source-code/ptlflow_sea_ice/inputs/
+images_path: images
+
+# Optional. None if no ground truth available
+gt_folder: ground_truth/
+
+# Optional. Contains type of ground_truth folders, which must correspond with
+# the folders inside inputs/ground_truth/. The list format is useful if you've
+# got more than one type of gt sources. If only one, provide your list with
+# only one element
+gt_source_list:
+  - sparse_soft_buoys
+  - sparse_gps_buoys
+
+# Optional
+gt_folder_raw: raw/
+
+# Optional
+gt_folder_processed: processed/
+
+# Optional. ground_truth type: dense (TODO), sparse or None
+gt_type: sparse
+
+output_path: outputs/
+
+models:
+  dpflow:
+    - chairs
+    - kitti
+    - sintel
+    - spring
+    - things
+
+  gmflow:
+    - chairs
+    - kitti
+    - sintel
+    - things
+
+  gmflowplus:
+    - things
+    - mix
+
+  gmflowplus_sc2:
+    - things
+    - mix
+    - sintel
+
+  gmflowplus_sc2_refine6:
+    - things
+    - mix
+    - sintel
+    - kitti
+
+  gmflow_refine:
+    - chairs
+    - sintel
+    - kitti
+    - things
+
+  gmflownet:
+    - kitti
+    - things
+
+  gmflownet_mix:
+    - sintel
+    - things
+
+  sea_raft_m:
+    - tartan
+    - chairs
+    - kitti
+    - sintel
+    - spring
+    - things
+
+  sea_raft_s:
+    - tartan
+    - chairs
+    - kitti
+    - sintel
+    - spring
+    - things
+
+  sea_raft_l:
+    - tartan
+    - chairs
+    - kitti
+    - sintel
+    - spring
+    - things
+
+  dflow:
+    - kitti
+    - sintel
+    - things
+
+  rpknet:
+    - chairs
+    - kitti
+    - sintel
+    - things
+
+  dip:
+    - kitti
+    - sintel
+    - things
+
+  matchflow_raft:
+    - things
+
+  neuflow2:
+    - mixed
+
+  memflow:
+    - kitti
+
+  memflow_t:
+    - kitti
+
+  flowformerplusplus:
+    - chairs
+
+  flowformer:
+    - chairs
+
+  skflow:
+    - kitti
+
+  # ["chairs", "kitti", "sintel", "things"]
+  matchflow_gma:
+    - chairs
+
+  raft:
+    - chairs
+    - kitti
+    - sintel
+    - things
+
+  pwcnet:
+    - sintel
+    - things
+
+  unimatch:
+    - mixed
+    - things
+
+  unimatch_scale2:
+    - mixed
+    - sintel
+    - things
+
+  waft:
+    - chairs
+    - things
+
+  memfof:
+    - tartan
+    - tskh
+    - kitti
+    - sintel
+    - spring
+    - things
