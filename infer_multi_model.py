@@ -9,11 +9,12 @@ import subprocess
 from PIL import Image
 from omegaconf import DictConfig, OmegaConf
 import struct
+import cv2 as cv
 import warnings
 warnings.filterwarnings("ignore")
 warnings.filterwarnings("ignore", category=UserWarning, module="debugpy._vendored.force_pydevd")
     
-    
+
 def get_inference_batch(cfg, image_folder):                        
     for model_name, ckpt_paths in cfg["models"].items():
         for ckpt_path in ckpt_paths:
@@ -147,6 +148,12 @@ def compute_metrics_per_image(gt, preds):
     epe_mean = epe.mean()
     flall_mean = 100*flall.mean()
     return epe_mean,flall_mean
+
+
+def flo_to_png(flo_path, png_filename, png_folder_path = ''):
+    flow_loaded = flow_utils.flow_read(input_data = flo_path, format = 'flo')
+    flow_rgb = flow_utils.flow_to_rgb(flow_loaded)[:, :, ::-1]
+    cv.imwrite(f'{png_folder_path}{png_filename}.png', flow_rgb)
 
 
 def main(cfg):

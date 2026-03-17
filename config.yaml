@@ -1,8 +1,8 @@
-python_exec: /home/jade/miniforge3/envs/ptlflow/bin/python
+python_exec: /home/jade/miniforge3/envs/ptlflow/bin/python # Customize with your python env path
 
-name: sidex_40km
+name: experiment # customize with your experiment name
 
-input_path: /home/jade/source-code/ptlflow_sea_ice/inputs/
+input_path: ./inputs/
 images_path: images
 
 # Optional. None if no ground truth available

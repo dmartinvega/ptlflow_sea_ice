@@ -11,11 +11,13 @@ This repository provides the code and evaluation pipeline used in the paper: "**
 
 The project benchmarks deep learning optical flow models for estimating **sea ice drift** from **RADARSAT-2 ScanSAR imagery**, evaluated against **GNSS-tracked buoys**. The repository includes tools to run inference with multiple optical flow models, compute evaluation metrics using sparse buoy observations, and analyze the resulting motion fields.
 
+This project builds upon the [PTLFlow](https://github.com/hmorimitsu/ptlflow) library, which provides a unified and extensible framework for benchmarking and deploying state-of-the-art optical flow models. Its modular design and broad model support enabled the large-scale evaluation of multiple deep learning optical flow methods presented in this work.
+
 📄 [Paper](https://arxiv.org/abs/2510.26653)
 
 📦 [Dataset](https://doi.org/10.5281/zenodo.19057988)
 
----
+
 
 # Overview
 
@@ -27,7 +29,7 @@ This repository evaluates **48 deep learning optical flow models** on **RADARSAT
 
 Key results show that several models achieve **sub-kilometer drift accuracy**, demonstrating that modern optical flow methods can be successfully transferred to polar remote sensing applications.
 
----
+
 
 # Key Features
 
@@ -38,7 +40,7 @@ Key results show that several models achieve **sub-kilometer drift accuracy**, d
 - Standardized output flow fields (`.flo` format) and images for visualization (`.png` format)
 - Tools for computing **Endpoint Error (EPE)** and **Fl-all** metrics
 
----
+
 
 # Dataset
 
@@ -47,7 +49,7 @@ The dataset consists of:
 - Derived **optical flow fields** produced by multiple models
 - Two input image samples (`.png` format) to ease comparison.
 
----
+
 
 # Installation
 
@@ -66,7 +68,7 @@ mamba activate ptlflow
 pip install -r requirements.txt
 ```
 
----
+
 
 # Quick Start
 
@@ -75,11 +77,11 @@ pip install -r requirements.txt
 3. Configure the inference settings
 4. Run multi-model inference
 
----
 
-# Expected Folder Structure
 
-Inputs must follow the directory structure below.
+## Expected Folder Structure
+
+Inputs must follow the directory structure below. Ground truth is only necessary if running the `compute_metrics` function. Files in `ground_truth/raw` are obligatory in that case, while not in `ground_truth/processed`, as the `check_or_create_gt` processes raw ground_truth files.
 
 ```
 project_root/
@@ -91,14 +93,29 @@ project_root/
         │   ├── ...
         │   └── image_n.tif│.png│.jpg
         └── ground_truth/
-            └── buoy_type/
-                ├── buoys_x.csv
-                └── buoys_y.csv
+            ├── buoy_type_1/
+            │   ├── raw/
+            │   │   ├── buoys_x.csv
+            │   │   └── buoys_y.csv
+            │   └── processed/
+            │       ├── image_1.flo
+            │       ├── ...
+            │       └── image_n.flo
+            ├── ...
+            └── buoy_type_n/
+                ├── raw/
+                │   ├── buoys_x.csv
+                │   └── buoys_y.csv
+                └── processed/
+                    ├── image_1.flo
+                    ├── ...
+                    └── image_n.flo
+            
 ```
 
-```
-# Note that you do not have to create the outputs' folder structure, this is only for reference, so you are familiarized with the outputs you should get.
+Note that you do not have to create the outputs' folder structure, this is only for reference, so you are familiarized with the outputs you should get.
 
+```
 project_root/
 └── outputs/
     │
@@ -133,13 +150,14 @@ project_root/
 
 Important:
 * **Image pairs and ground truth references must share the same base name.**
+* Images will be loaded in alphanumerical order.
 * Ground truth must be provided in **pixel coordinates**.
 
----
 
-# Input Data Format
 
-## Images
+## Input Data Format
+
+### Images
 
 Two SAR images representing consecutive acquisitions of the same region. All the images must share the number of pixels (e.g. spatial resolution.)
 
@@ -150,9 +168,9 @@ scene_001_1.tif
 scene_001_2.tif
 ```
 
----
 
-## Ground Truth (Sparse Buoys)
+
+### Ground Truth (Sparse Buoys)
 
 Ground truth is provided as **GNSS buoy positions projected into pixel coordinates**.
 
@@ -163,33 +181,33 @@ buoys_x.csv
 buoys_y.csv
 ```
 
-These contain the buoy displacement components along each axis.
+These contain the buoy displacement components along each axis for each buoy.
 
 **Important:**
 The evaluation metrics implemented in this repository are designed specifically for **sparse buoy observations**.
 
----
 
-# Running Inference
 
-Inference across multiple optical flow models is controlled through a configuration dictionary.
+## Running Inference
 
-Customize the configuration in the inference script or config file before running.
+Inference across multiple optical flow models is controlled through a configuration dictionary (`config.yaml`).
+
+Customize the configuration in the inference script or **config file** (recommended) before running.
 
 Example command:
 
 ```bash
-python infer_multi_model.py --config configs/config.yaml
+python infer_multi_model.py --config config.yaml
 ```
 
 The script will:
 
 1. Load SAR image pairs
 2. Run inference using multiple optical flow models (the ones defined in config.yaml)
-3. Save predicted flow fields
+3. Save predicted flow fields and png images
 4. Compute evaluation metrics against buoy ground truth
 
----
+
 
 # Outputs
 
@@ -220,7 +238,7 @@ Units: **pixels**
 
 This means the flow provides the predicted motion vector for **every pixel in the image**.
 
----
+
 
 # Evaluation Metrics
 
@@ -236,7 +254,7 @@ Percentage of flow vectors whose error exceeds a defined threshold.
 
 Evaluation is performed **only at buoy locations**, since ground truth is sparse.
 
----
+
 
 # Benchmark Results
 
@@ -249,7 +267,7 @@ Several models achieve:
 
 This level of accuracy is small relative to typical spatial scales of Arctic sea ice motion.
 
----
+
 
 # Scatterplot of Models' Performance
 
@@ -257,7 +275,21 @@ The figure below shows the relationship between optical flow model performance m
 
 ![Scatterplot](scatterplot.png)
 
----
+
+# Computational Resources
+
+Experiments were conducted on a workstation with the following specifications:
+
+- **GPU:** NVIDIA RTX5090 (32 GB)
+- **CPU:** Intel Core i9 14900K
+- **RAM:** 256 GB
+- **Storage:** NVMe (12 TB)
+
+The experiments involve running multiple deep learning optical flow models, which can be computationally demanding. GPU acceleration is strongly recommended for efficient inference.
+
+While the pipeline can be adapted to different hardware setups, performance (runtime and memory usage) may vary depending on the available resources.
+
+
 # Citation
 
 If you use this repository or dataset, please cite:
@@ -284,14 +316,16 @@ If you use this repository or dataset, please cite:
 }
 ```
 
----
+
 
 # License
 
 This project is released under the **MIT License**.
 
----
+
 
 # Acknowledgements
 
-The authors acknowledge the U.S. National Ice Center for providing RADARSat-2 imagery used in this study. Ground truth data were provided by multiple collaborating institutions, as cited in the text. Due to data usage restrictions, the satellite imagery cannot be publicly shared.
+The authors acknowledge the U.S. National Ice Center for providing RADARSat-2 imagery used in this study. Ground truth data were provided by multiple collaborating institutions, as cited in the paper. Due to data usage restrictions, the satellite imagery cannot be publicly shared.
+
+We gratefully acknowledge the developers of [PTLFlow](https://github.com/hmorimitsu/ptlflow) for providing a comprehensive and well-maintained framework for optical flow research. This library enabled the efficient evaluation and comparison of a large number of state-of-the-art models under a unified interface.
