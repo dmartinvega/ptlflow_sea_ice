@@ -3,9 +3,14 @@
 ![Python](https://img.shields.io/badge/python-3.12-blue)
 [![PyTorch](https://img.shields.io/badge/PyTorch-%23EE4C2C.svg?style=flat&logo=PyTorch&logoColor=white)](https://pytorch.org/)
 [![PyTorch Lightning](https://img.shields.io/badge/PyTorch_Lightning-%23792EE5.svg?style=flat&logo=pytorchlightning&logoColor=white)](https://lightning.ai/docs/pytorch/stable/)
+[![Dataset - Zenodo](https://img.shields.io/badge/Dataset_Zenodo-10.5281/zenodo.19057988-blue)](https://doi.org/10.5281/zenodo.19057988)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
 This work was presented at the NeurIPS 2025 Workshop on Machine Learning and the Physical Sciences (ML4PS).
+
+📄 [Paper](https://arxiv.org/abs/2510.26653) - 
+📦 [Dataset](https://doi.org/10.5281/zenodo.19057988)
+
 
 This repository provides the code and evaluation pipeline used in the paper: "**Towards Reliable Sea Ice Drift Estimation in the Arctic: Deep Learning Optical Flow on RADARSAT-2**"
 
@@ -13,11 +18,18 @@ The project benchmarks deep learning optical flow models for estimating **sea ic
 
 This project builds upon the [PTLFlow](https://github.com/hmorimitsu/ptlflow) library, which provides a unified and extensible framework for benchmarking and deploying state-of-the-art optical flow models. Its modular design and broad model support enabled the large-scale evaluation of multiple deep learning optical flow methods presented in this work.
 
-📄 [Paper](https://arxiv.org/abs/2510.26653)
-
-📦 [Dataset](https://doi.org/10.5281/zenodo.19057988)
-
-
+- [Overview](#overview)
+- [Key Features](#key-features)
+- [Dataset](#dataset)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Outputs](#outputs)
+- [Evaluation Metrics](#evaluation-metrics)
+- [Benchmark Results](#benchmark-results)
+- [Scatterplot of Models' Performance](#scatterplot-of-models-performance)
+- [Computational Resources](#computational-resources)
+- [Citation](#citation)
+- [Acknowledgements](#acknowledgements)
 
 # Overview
 
@@ -315,14 +327,6 @@ If you use this repository or dataset, please cite:
   type         = {Data set}
 }
 ```
-
-
-
-# License
-
-This project is released under the **MIT License**.
-
-
 
 # Acknowledgements
 
